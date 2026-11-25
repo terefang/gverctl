@@ -1,10 +1,11 @@
 // Package main implements a command-line tool for reading, modifying, and writing
-// version strings formatted as R.M.N(-alpha|-beta|-rc|-lts)(-DD).
+// version strings formatted as R.M.N(-alpha|-beta|-rc|-lts).
 package main
 
 import (
 	// bufio provides buffered I/O for reading from standard input.
 	"bufio"
+	// pkg provides shared package constants such as PkgVersion.
 	"gversion/pkg"
 
 	// errors provides error creation and inspection helpers.
@@ -167,6 +168,9 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 	// Tool version flag.
 	showVersion := fs.Bool("version", false, "print the CLI tool version and exit")
 
+	// Version string argument flag.
+	parseVersionStr := fs.String("parse", "", "version string passed directly as a command-line argument")
+
 	// Input and output flags.
 	inFile := fs.String("in", "", "input file path; reads from stdin if omitted")
 	outFile := fs.String("out", "", "output file path; writes to stdout if omitted")
@@ -194,10 +198,16 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		return err
 	}
 
-	// Read raw input from file or stdin.
-	rawInput, err := readInput(*inFile, stdin)
-	if err != nil {
-		return err
+	// Obtain raw version input from -parse if given, or from file/stdin otherwise.
+	var rawInput string
+	var err error
+	if *parseVersionStr != "" {
+		rawInput = *parseVersionStr
+	} else {
+		rawInput, err = readInput(*inFile, stdin)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Parse input into a Version struct.

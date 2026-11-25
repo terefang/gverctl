@@ -51,16 +51,3 @@
     * `go run main.go -in version.txt -out next_version.txt -set-m 5 -set-tag lts`
 * Read from `stdin` and clear the tag:
     * `echo "2.0.0-alpha" | go run main.go -clear-tag`
-
-## Code Structure Explanation
-
-* `toolVersion`: Constant holding the CLI tool version string (`"0.1.0"`).
-* `versionPattern`: Regular expression matching `^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc|lts))?$`.
-* `Version`: Struct storing `R`, `M`, `N`, `Tag`, and `HasTag`.
-* `ParseVersion`: Trims input whitespace, validates the format, parses numeric components, and extracts the optional tag.
-* `(v Version) String`: Formats `R.M.N` and appends `-<Tag>` when `HasTag` is true and `Tag` is non-empty.
-* `validateTag`: Checks that a tag is empty or one of `alpha`, `beta`, `rc`, or `lts`.
-* `readInput`: Reads raw text from `-in` if given, otherwise from the `io.Reader` (`stdin`).
-* `writeOutput`: Appends `\n` and writes to `-out` if given, otherwise to the `io.Writer` (`stdout`).
-* `run`: Creates the `gverctl` `flag.FlagSet`, parses flags, handles `-version`, reads and parses input, applies set/clear/increment operations, and writes output.
-* `main`: Calls `run` with `os.Args[1:]`, `os.Stdin`, and `os.Stdout`, printing errors to `os.Stderr` and exiting with status `1` on failure.
