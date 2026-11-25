@@ -1,0 +1,6 @@
+
+  ./version.txt -- Version Information for gverctl (syntax: Text)
+  [automatically generated and maintained by GNU shtool]
+
+  This is gverctl, Version 0.1.6 (25-Nov-2026)
+
